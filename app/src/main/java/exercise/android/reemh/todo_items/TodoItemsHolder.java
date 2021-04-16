@@ -1,5 +1,6 @@
 package exercise.android.reemh.todo_items;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,10 +17,10 @@ public interface TodoItemsHolder {
   void addNewInProgressItem(String description);
 
   /** mark the @param item as DONE */
-  void markItemDone(TodoItem item);
+  int markItemDone(TodoItem item);
 
   /** mark the @param item as IN-PROGRESS */
-  void markItemInProgress(TodoItem item);
+  int markItemInProgress(TodoItem item);
 
   /** delete the @param item */
   void deleteItem(TodoItem item);
