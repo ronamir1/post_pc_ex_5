@@ -1,5 +1,7 @@
 package exercise.android.reemh.todo_items;
 
+import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,9 @@ public interface TodoItemsHolder {
    * Creates a new TodoItem and adds it to the list, with the @param description and status=IN-PROGRESS
    * Subsequent calls to [getCurrentItems()] should have this new TodoItem in the list
    */
+
+  public void saveItems();
+
   void addNewInProgressItem(String description);
 
   /** mark the @param item as DONE */

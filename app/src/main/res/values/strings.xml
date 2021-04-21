@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TodoItems</string>
+    <string name="preference_file_key">exercise.android.reemh.todo_items_preference_file_key</string>
 </resources>

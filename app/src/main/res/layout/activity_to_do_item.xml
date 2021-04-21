@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ToDoItemActivity">
+
+    <TextView
+        android:id="@+id/creationDate"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_height="30dp"
+        android:textColor="@color/black"
+        android:text="Creation Date: "
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/creationDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:textColor="@color/black"
+        android:text=""
+        app:layout_constraintTop_toTopOf="@id/creationDate"
+        android:layout_marginStart="5dp"
+        app:layout_constraintLeft_toRightOf="@id/creationDate"/>
+
+    <TextView
+        android:id="@+id/lastModified"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:text="Last Modified: "
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/creationDate"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/lastModifiedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text=""
+        android:layout_marginStart="5dp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="@id/lastModified"
+        app:layout_constraintLeft_toRightOf="@id/lastModified"/>
+
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:id="@+id/radio"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/lastModified"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status:"
+            android:textColor="@color/black" />
+        <RadioButton android:id="@+id/radioButtonInProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In Progress"
+            android:layout_marginStart="5dp"
+            android:onClick="onRadioButtonClicked"/>
+        <RadioButton android:id="@+id/radioButtonDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:onClick="onRadioButtonClicked"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio"
+        tools:ignore="ExtraText">
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Description"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radio" />
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:focusableInTouchMode="true"
+            android:text=""
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toRightOf="@id/description"
+            app:layout_constraintTop_toTopOf="@id/description" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

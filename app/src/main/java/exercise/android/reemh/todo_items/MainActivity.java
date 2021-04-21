@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.google.gson.*;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -28,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
   public EditText editTextInsertTask;
   public FloatingActionButton buttonCreateTodoItem;
   public RecyclerView recyclerTodoItemsList;
-  public ToDoItemsAdapter adapter;
+  public TodoItemsHolderImpl.ToDoItemsAdapter adapter;
+  public SharedPreferences sp;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,11 @@ public class MainActivity extends AppCompatActivity {
     editTextInsertTask = findViewById(R.id.editTextInsertTask);
     buttonCreateTodoItem = findViewById(R.id.buttonCreateTodoItem);
     recyclerTodoItemsList = findViewById(R.id.recyclerTodoItemsList);
-    if (holder == null) {
-      holder = new TodoItemsHolderImpl();
-    }
+    Context context = MainActivity.this;
+    sp = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+    holder = new TodoItemsHolderImpl(sp);
 
-    adapter = new ToDoItemsAdapter(holder);
+    adapter = new TodoItemsHolderImpl.ToDoItemsAdapter(holder);
     recyclerTodoItemsList.setAdapter(adapter);
     recyclerTodoItemsList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -57,19 +60,12 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
-
-
-
-
-    // TODO: implement the specs as defined below
-    //    (find all UI components, hook them up, connect everything you need)
   }
 
   @Override
   protected void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
     TodoItemsHolderState state = new TodoItemsHolderState();
-    state.holder = holder;
     state.text = editTextInsertTask.getText().toString();
     outState.putSerializable("current state", state);
   }
@@ -78,84 +74,17 @@ public class MainActivity extends AppCompatActivity {
   protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
     TodoItemsHolderState state = (TodoItemsHolderState) savedInstanceState.getSerializable("current state");
-    holder = state.holder;
     editTextInsertTask.setText(state.text);
-    adapter = new ToDoItemsAdapter(holder);
-    recyclerTodoItemsList.setAdapter(adapter);
-    recyclerTodoItemsList.setLayoutManager(new LinearLayoutManager(this));
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    holder.saveItems();
   }
 
   private static class TodoItemsHolderState implements Serializable {
-    TodoItemsHolder holder;
     String text;
-  }
-
-  public static class ToDoItemsAdapter extends RecyclerView.Adapter<ToDoItemsAdapter.ViewHolder> {
-
-    private final TodoItemsHolder todoItemsHolder;
-
-
-    ToDoItemsAdapter(TodoItemsHolder data) {
-      this.todoItemsHolder = data;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-      View view = LayoutInflater.from(parent.getContext()).
-              inflate(R.layout.row_todo_item, parent, false);
-      return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ToDoItemsAdapter.ViewHolder holder, int position) {
-      holder.checkboxButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          int pos = holder.getLayoutPosition();
-          TodoItem item = todoItemsHolder.getCurrentItems().get(pos);
-          if (holder.checkboxButton.isChecked()){
-            int new_pos = todoItemsHolder.markItemDone(item);
-            notifyItemMoved(pos, new_pos);
-          }
-          else {
-            int new_pos =todoItemsHolder.markItemInProgress(item);
-            notifyItemMoved(pos, new_pos);
-          }
-        }
-      });
-      holder.toDoItemRow.setOnLongClickListener(new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View view) {
-          int pos = holder.getLayoutPosition();
-          TodoItem item = todoItemsHolder.getCurrentItems().get(pos);
-          todoItemsHolder.deleteItem(item);
-          notifyItemRangeRemoved(pos, 1);
-          return true;
-        }
-      });
-      holder.toDoItemDescription.setText(todoItemsHolder.getCurrentItems().get(position).text);
-      int status = todoItemsHolder.getCurrentItems().get(position).status;
-      holder.checkboxButton.setChecked(status == TodoItem.DONE);
-    }
-
-    @Override
-    public int getItemCount() {
-      return todoItemsHolder.getCurrentItems().size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-      private final TextView toDoItemDescription;
-      private final CheckBox checkboxButton;
-      private final ConstraintLayout toDoItemRow;
-
-      public ViewHolder(@NonNull View itemView) {
-        super(itemView);
-        this.toDoItemDescription = itemView.findViewById(R.id.toDoItemDescription);
-        this.checkboxButton = itemView.findViewById(R.id.checkboxButton);
-        this.toDoItemRow = itemView.findViewById(R.id.toDoItemRow);
-      }
-    }
   }
 }
 
