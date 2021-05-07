@@ -28,11 +28,25 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 // TODO: implement!
 public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
-  LinkedList<TodoItem> items = new LinkedList<>();
+  LinkedList<TodoItem> items;
   SharedPreferences sp;
 
-  TodoItemsHolderImpl(SharedPreferences sp){
+  TodoItemsHolderImpl(){
+    items = new LinkedList<>();
+  }
+
+  @Override
+  public List<TodoItem> getCurrentItems() { return new ArrayList<>(this.items); }
+
+  public void setSp(SharedPreferences sp){
     this.sp = sp;
+  }
+
+  public void recoverItems(){
+    if (sp == null){
+      items = new LinkedList<>();
+      return;
+    }
     String stateString = this.sp.getString("holder", "");
     if (!stateString.equals("") && !stateString.equals("{\"items\":[]}")){
       Gson gson = new Gson();
@@ -44,9 +58,6 @@ public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
     }
     saveItems();
   }
-
-  @Override
-  public List<TodoItem> getCurrentItems() { return new ArrayList<TodoItem>(this.items); }
 
   public void saveItems(){
     SharedPreferences.Editor editor = sp.edit();
@@ -62,7 +73,10 @@ public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
     TodoItem newItem = new TodoItem(description, TodoItem.IN_PROGRESS, current_time.getTime());
     newItem.modificationTime = newItem.creationTime;
     this.items.addFirst(newItem);
-    saveItems();
+    if (sp != null){
+      saveItems();
+    }
+
   }
 
   @Override
@@ -71,7 +85,9 @@ public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
     Date current_time = Calendar.getInstance().getTime();
     item.modificationTime = current_time.getTime();
     Collections.sort(this.items);
-    saveItems();
+    if (sp != null){
+      saveItems();
+    }
     return this.items.indexOf(item);
   }
 
@@ -81,7 +97,9 @@ public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
     Date current_time = Calendar.getInstance().getTime();
     item.modificationTime = current_time.getTime();
     Collections.sort(this.items);
-    saveItems();
+    if (sp != null){
+      saveItems();
+    }
     return this.items.indexOf(item);
   }
 
@@ -89,7 +107,9 @@ public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
   public void deleteItem(TodoItem item)
   {
     this.items.remove(item);
-    saveItems();
+    if (sp != null){
+      saveItems();
+    }
   }
 
   public static class ToDoItemsAdapter extends RecyclerView.Adapter<ToDoItemsAdapter.ViewHolder> {

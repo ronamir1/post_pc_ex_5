@@ -19,6 +19,10 @@ public interface TodoItemsHolder {
 
   public void saveItems();
 
+  public void setSp(SharedPreferences sp);
+
+  public void recoverItems();
+
   void addNewInProgressItem(String description);
 
   /** mark the @param item as DONE */

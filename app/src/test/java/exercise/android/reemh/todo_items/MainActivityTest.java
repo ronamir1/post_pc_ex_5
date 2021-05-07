@@ -115,7 +115,7 @@ public class MainActivityTest extends TestCase {
     ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
     Mockito.when(mockHolder.getCurrentItems())
       .thenReturn(itemsReturnedByHolder);
-    TodoItem itemInProgress = new TodoItem("do homework", TodoItem.IN_PROGRESS);
+    TodoItem itemInProgress = new TodoItem("do homework", TodoItem.IN_PROGRESS, 0);
     // TODO: customize `itemInProgress` to have type IN-PROGRESS and description "do homework"
     itemsReturnedByHolder.add(itemInProgress);
 
@@ -151,7 +151,7 @@ public class MainActivityTest extends TestCase {
     ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
     Mockito.when(mockHolder.getCurrentItems())
       .thenReturn(itemsReturnedByHolder);
-    TodoItem itemDone = new TodoItem("buy tomatoes", TodoItem.DONE);
+    TodoItem itemDone = new TodoItem("buy tomatoes", TodoItem.DONE, 0);
     // TODO: customize `itemDone` to have type DONE and description "buy tomatoes"
     itemsReturnedByHolder.add(itemDone);
 

@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
     recyclerTodoItemsList = findViewById(R.id.recyclerTodoItemsList);
     Context context = MainActivity.this;
     sp = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-    holder = new TodoItemsHolderImpl(sp);
+    holder = new TodoItemsHolderImpl();
+    holder.setSp(sp);
+    holder.recoverItems();
 
     adapter = new TodoItemsHolderImpl.ToDoItemsAdapter(holder);
     recyclerTodoItemsList.setAdapter(adapter);

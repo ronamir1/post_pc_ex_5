@@ -89,7 +89,7 @@ public class TodoItemsHolderImplTest {
   public void remove_from_empty_holder_is_not_crashing(){
     // setup
     TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
-    TodoItem t = new TodoItem("sddsd", TodoItem.IN_PROGRESS);
+    TodoItem t = new TodoItem("sddsd", TodoItem.IN_PROGRESS, 0);
     // test
     holderUnderTest.deleteItem(t);
   }

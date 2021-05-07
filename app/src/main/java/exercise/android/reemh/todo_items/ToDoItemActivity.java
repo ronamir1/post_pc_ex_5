@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -36,26 +39,43 @@ public class ToDoItemActivity extends AppCompatActivity {
         radioButtonInProgress = findViewById(R.id.radioButtonInProgress);
         creationTimeTextView = findViewById(R.id.creationDateTime);
         lastModifiedTextView = findViewById(R.id.lastModifiedTime);
-
         Context context = ToDoItemActivity.this;
         sp = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        holder = new TodoItemsHolderImpl(sp);
+        if (holder == null){
+            holder = new TodoItemsHolderImpl();
+            holder.setSp(sp);
+            holder.recoverItems();
+        }
+
+
         Intent intent = getIntent();
         pos = intent.getIntExtra("position", 0);
         item = holder.getCurrentItems().get(pos);
 
         description.setText(item.text);
-        description.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        description.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (item.text.equals(editable.toString())){
+                    return;
+                }
                 Calendar currentTime = Calendar.getInstance();
                 item.modificationTime = currentTime.getTime().getTime();
-                item.text = textView.getText().toString();
+                item.text = editable.toString();
                 holder.saveItems();
                 lastModifiedTextView.setText(get_time_message(item.modificationTime));
                 lastModifiedTextView.invalidate();
-                return true;
             }
         });
 
@@ -123,5 +143,12 @@ public class ToDoItemActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         holder.saveItems();
         startActivity(intent);
+    }
+
+    public void hideKeyBoard(View view) {
+        InputMethodManager imm =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(description.getWindowToken(), 0);
+        description.setCursorVisible(false);
     }
 }
