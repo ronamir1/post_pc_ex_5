@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,10 +152,12 @@ public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
           int pos = holder.getLayoutPosition();
           TodoItem item = todoItemsHolder.getCurrentItems().get(pos);
           if (holder.checkboxButton.isChecked()){
+            holder.toDoItemDescription.setPaintFlags(holder.toDoItemDescription.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             int new_pos = todoItemsHolder.markItemDone(item);
             notifyItemMoved(pos, new_pos);
           }
           else {
+            holder.toDoItemDescription.setPaintFlags(0);
             int new_pos =todoItemsHolder.markItemInProgress(item);
             notifyItemMoved(pos, new_pos);
           }
@@ -173,6 +176,9 @@ public class TodoItemsHolderImpl extends Activity implements TodoItemsHolder {
       holder.toDoItemDescription.setText(todoItemsHolder.getCurrentItems().get(position).text);
       int status = todoItemsHolder.getCurrentItems().get(position).status;
       holder.checkboxButton.setChecked(status == TodoItem.DONE);
+      if (status == TodoItem.DONE){
+        holder.toDoItemDescription.setPaintFlags(holder.toDoItemDescription.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+      }
     }
 
     @Override
